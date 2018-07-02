@@ -1,0 +1,57 @@
+---
+
+- name: TRAEFIK | Create directories
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "{{ traefik_config_directory }}"
+    - "{{ traefik_file_directory }}"
+    - "{{ traefik_log_path }}"
+
+- name: TRAEFIK | Download binary
+  get_url:
+    url: "{{ traefik_binary_url }}"
+    dest: /usr/bin/traefik
+    owner: root
+    group: root
+    mode: 0755
+  tags: update-traefik-binary
+
+- name: TRAEFIK | Configuration
+  template:
+    src: "etc/traefik/traefik.toml.j2"
+    dest: "{{ traefik_config_directory }}/traefik.toml"
+    owner: root
+    group: root
+    mode: 0744
+  notify:
+    - Restart Traefik
+  tags: update-traefik-config
+
+- name: TRAEFIK | Deploy rules
+  template:
+    src: "etc/traefik/rules/{{ item }}.toml.j2"
+    dest: "{{ traefik_file_directory }}/{{ item }}.toml"
+    owner: root
+    group: root
+    mode: 0744
+  with_items:
+    - http
+  notify:
+    - Restart Traefik
+  tags: update-traefik-rules
+
+- name: TRAEFIK | Configure Systemd
+  template:
+    src: "lib/systemd/system/traefik.service.j2"
+    dest: "/lib/systemd/system/traefik.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart Traefik
+  tags: update-traefik-systemd

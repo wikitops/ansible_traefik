@@ -1,0 +1,42 @@
+---
+
+traefik_version: 1.6.4
+traefik_binary_url: https://github.com/containous/traefik/releases/download/v{{ traefik_version }}/traefik_linux-amd64
+
+traefik_config_directory: /etc/traefik
+
+# Global configuration
+traefik_debug: "false"
+traefik_logLevel: ERROR
+traefik_defaultEntryPoints: '["http", "https"]'
+
+# Entrypoints configuration
+traefik_entryPoints:
+  - name: health
+    address: ":8081"
+
+traefik_file_directory: "{{ traefik_config_directory }}/rules/"
+
+# Logs configuration
+traefik_log_path: /var/log/traefik
+traefik_log_filePath: "{{ traefik_log_path }}/traefik.log"
+traefik_log_format: common
+
+traefik_accessLog_filePath: "{{ traefik_log_path }}/access_log.log"
+traefik_accessLog_format: common
+
+# API configuration
+traefik_api_entryPoint: traefik
+traefik_api_dashboard: "true"
+
+# Ping configuration
+taefik_ping_entryPoint: "health"
+
+# Docker configuration
+traefik_docker_provider: false
+traefik_docker_endpoint: ""
+traefik_docker_domain: ""
+traefik_docker_watch: ""
+traefik_docker_filename: ""
+traefik_docker_exposeByDefault: ""
+traefik_docker_swarmMode: ""
