@@ -55,7 +55,7 @@ To deploy the Treafik instance, you just have to run the Ansible playbook traefi
 ansible-playbook traefik.yml
 ```
 
-If everything run as expected, you should access the Trafik Dashboard on that URL : http://10.0.4.21:8080/
+If everything run as expected, you should access the Traefik Dashboard on that URL : http://10.0.4.21:8080/
 
 #### Destroy
 
